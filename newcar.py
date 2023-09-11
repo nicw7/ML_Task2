@@ -24,6 +24,7 @@ CAR_SIZE_Y = 60
 BORDER_COLOR = (255, 255, 255, 255)  # Color To Crash on Hit
 
 current_generation = 0  # Generation counter
+
 """
 The Car Class 
 
@@ -37,7 +38,27 @@ why it is necessary and where it is being used in the rest of the program.
 
 
 class Car:
-    """1. This Function:"""
+    """1. This Function:
+
+    Firstly the program starts by loading an image from a file named "car.png".
+    Once the image has been loaded the program converts and scales it based on the stated size and format.
+    This will improve the program's performance and speed when performed.
+
+    Secondly the program sets various attributes for the car suchs as the position, angle and speed around the race track. 
+    The starting position will equal (830, 920), the angle will be initially set to 0 degress and the speed to 0.
+
+    Thirdly the speed will not be set so that the variable will be able to be changed depeding on the generations of the cars and selective breeding.
+
+    Fourthly the function  calculates the center of the cars position and then placing the car size ontop of that to initialise the car.
+
+    Next the function will draw the radars which act as the senses for the car which will find where the walls of the track are and move so that the 
+    car will turn to avoid whatever is in its direct line of sight. The amount of radars that the cars posses can be changed to reflect the amout of input
+    that you want the car to have.
+
+    Lastly the function defines 2 variables and a boolean to verify the cars performance and fitness on the track. Firstly a boolean is created to verify that
+    the car has not been crashed. Furthermore two more variables are created which hold the distance traveled and the time on track.
+    
+    """
 
     def __init__(self):
         # Load Car Sprite and Rotate
@@ -66,6 +87,10 @@ class Car:
         self.time = 0  # Time Passed
 
     """ 2. This Function:
+
+    Screen is being drawn through the use of pygame.
+    Sprite positions are being placed onto the screen at the current location.
+    Furthermore it optionaly draws the radars for the sensors.
     
     """
 
@@ -75,6 +100,18 @@ class Car:
 
     """ 3. This Function:
     
+    Firstly this is a function that defines and draws the radars. This is done through the use of self and screen, which are passed in.
+    The first variable self is the location of each of the individual cars, while the screen is the location relative to the wider viewing panel.
+    
+    Secondly the function runs a for loop which for each radar in the self of each car runs the following instructions.
+    Next the function extracts the position of the radar center.
+    
+    Then two Pygame drawing functions are used for visualization:
+
+    pygame.draw.line: This function draws a line from the center of the screen to the position of the radar sensor. 
+    The line color is green (RGB: 0, 255, 0), and it has a thickness of 1 pixel.
+
+    pygame.draw.circle: This function draws a small green circle at the position of the radar sensor. The circle has a radius of 5 pixels.
     """
 
     def draw_radar(self, screen):
@@ -86,6 +123,14 @@ class Car:
 
     """ 4. This Function:
     
+    The function then iterates through each corner of the object, represented by the variable 'point'.
+    It checks whether any of these corners touch the border color on the game map.
+    If the pixel at the current 'point' coordinates on the game map matches the 'BORDER_COLOR', it signifies a collision.
+
+    If a collision is detected at any corner, the 'self.alive' flag is set to 'False' to indicate that the object has crashed,
+    and the loop is broken to prevent further checks. This function essentially determines the collision status of the object
+    with the border color on the game map.
+
     """
 
     def check_collision(self, game_map):
@@ -99,6 +144,18 @@ class Car:
 
     """ 5. This Function:
     
+    In this function, `check_radar`, the first step is to initialize a variable `length` to zero. 
+    Then, the function calculates the x and y coordinates based on the given `degree` and `game_map`. 
+    It uses trigonometric functions to determine the new coordinates.
+
+    Next, there's a `while` loop that continues as long as two conditions are met: first, the color at the current `(x, y)` 
+    position on the `game_map` is not equal to `BORDER_COLOR`, and second, `length` is less than 300. Inside this loop, the `length` 
+    is incremented by 1, and the new `(x, y)` coordinates are recalculated using trigonometric functions.
+
+    Once the loop exits, the function calculates the distance `dist` between the final `(x, y)` coordinates and the center of the object. 
+    This distance is calculated using the Euclidean distance formula. Finally, the calculated `(x, y)` coordinates and `dist` are appended to 
+    the `self.radars` list as a sub-list, forming a radar reading.
+
     """
 
     def check_radar(self, degree, game_map):
@@ -132,6 +189,18 @@ class Car:
 
     """ 6. This Function:
     
+    The function checks if the car's speed has been set before. If not, it sets the speed to 20 and marks the speed as set.
+    The function rotates the car's sprite based on its current angle and moves it in the right X-direction.
+    It ensures that the car stays at least 20 pixels away from the edge of the game map.
+
+    The distance traveled by the car is increased by its current speed, and the time is incremented by 1.
+    Similar to the X-position update, the function also updates the Y-position of the car, ensuring it stays within the boundaries of the game map.
+    The center of the car is recalculated based on its new position.
+
+    Four corner points of the car are calculated, considering its angle and size.
+    The function checks for collisions between the car and the game map and clears the car's radar data.
+    It then iterates through a range of angles from -90 to 120 with a step size of 45 and checks the radar for each angle in relation to the game map.
+
     """
 
     def update(self, game_map):
@@ -194,6 +263,13 @@ class Car:
 
     """ 7. This Function:
     
+    In this function, `get_data`, the first step is to obtain the radar data and store it in the variable `radars`.
+    Then, a list called `return_values` is initialized with five zeros. The function proceeds to iterate through the `radars` list,
+    using a for loop with the `enumerate` function to provide both the index `i` and the radar data `radar` in each iteration.
+    Inside the loop, it calculates the integer division of the second element of each radar data by 30 and assigns the result to the corresponding position
+    in the `return_values` list.
+    This step effectively computes distances to the border for each radar and stores them in the `return_values` list.
+
     """
 
     def get_data(self):
@@ -207,6 +283,8 @@ class Car:
 
     """ 8. This Function:
     
+    This function is a function that checks if the car is alive through returning the self object.
+
     """
 
     def is_alive(self):
@@ -215,6 +293,12 @@ class Car:
 
     """ 9. This Function:
     
+    In the given function, "get_reward," the first step involves calculating the reward.
+    This is done by taking the value of "self.distance" and dividing it by half of the constant "CAR_SIZE_X." 
+    It appears that the division is used to determine the reward, and the comment
+    suggests that this calculation might be subject to change in the future.
+    Finally, the calculated reward is returned as the function's output.
+
     """
 
     def get_reward(self):
@@ -223,6 +307,17 @@ class Car:
         return self.distance / (CAR_SIZE_X / 2)
 
     """ 10. This Function:
+    
+    In the rotate_center function, the code first obtains the rectangle that encloses the input image using image.get_rect().
+    It then rotates the image by the specified angle using pygame.transform.rotate, resulting in the rotated_image.
+    To ensure that the rotated image stays centered properly, a copy of the original rectangle is created as rotated_rectangle,
+    and its center is updated to match the center of the rotated image.
+    Finally, the code extracts the subsurface of the rotated image based on the updated rectangle and returns this modified image.
+
+    In the draw_radar function, the code iterates through a list of radar positions stored in self.radars.
+    For each radar position, it draws a green line from the center of the screen to that radar position using pygame.draw.line.
+    Additionally, it draws a green circle at the radar position using pygame.draw.circle. These actions are performed for each radar position in the list,
+    allowing the radar points to be visualized on the screen.
     
     """
 
@@ -235,11 +330,67 @@ class Car:
         rotated_image = rotated_image.subsurface(rotated_rectangle).copy()
         return rotated_image
 
+    def draw_radar(self, screen):
+        # Optionally Draw All Sensors / Radars
+        for radar in self.radars:
+            position = radar[0]
+            pygame.draw.line(screen, (0, 255, 0), self.center, position, 1)
+            pygame.draw.circle(screen, (0, 255, 0), position, 5)
 
-""" This Function:
+    """ This Function:
 
-"""
+    Firstly the function is defined as run_simulation and it takes two arguments (genomes and config).
+    Next there are two lists which are emptied namely nets and cars.
+    Once this is complete the function creates a fullscreen window using the newly initialized pygame.
 
+    Next the function runs a for loop which iterates over each item in genomes through the use of the tracker i.
+    During the loop, a feed forward neat neural network is created and the net is appended to "nets".
+    Futhermore each genome's fitness is set to 0 before simulation is run.
+
+    Next a clock is created using the pygame library, the fonts are created and the game map is loaded from the files using the convert functionality
+    which speeds up the performance of the program.
+
+    Fifth the generation counter is incremetented displaying to the user how many generations of the cars have been trialed, and the counter is set to limit
+    the simulation time.
+
+    Next an infinite loop is created that constantly runs a for loop. This for loop will check for user interactions with the program and subsequently quit
+    the program if it is found that the user has clicked the exit button.
+
+    After this is completed the program runs a for loop which is responsible for making decisions for each car in the simulation.
+    It uses the i placeholder and the car object to iterate through the list of cars through the method 'enumerate(cars)'.
+
+    Then for each car it activates the neural network through using the neural net's activation function and passing the get_data from the car.
+    It then determines the action to be taken by the car based on the neural network's output (output). The action is determined by finding the index
+    of the maximum value in the output array (choice = output.index(max(output))).
+    Depending on the value of choice, the car's behavior is adjusted:
+
+    If choice is 0, the car's angle is increased by 10 degrees, simulating a left turn.
+    If choice is 1, the car's angle is decreased by 10 degrees, simulating a right turn.
+    If choice is 2 and the car's speed minus 2 is greater than or equal to 12, the car's speed is decreased by 2, simulating slowing down.
+
+    After all of this is completed the a check will be created which will make sure that the car is still alive:
+    If the car is still alive then the fitness level of the car will be increased due to the proficiency of its genes.
+    If the car is dead then the loop will be broken not allowing the car to continue with its genome.
+
+    Furthermore the counter will count up to around 20 seconds at which point the alive checking function above will be run.
+
+    Next the program uses the "blit" method of pygame inorder to draw the screen at position (0,0).
+    A for loop is then run that for each car in the "cars" list will check if the car is alive:
+    If it is then only the alive cars will be drawn ensuring that the dead cars are not re rendered.
+
+    Next the program displays the generation number which represents the amount of genome recombinations that have occured during the run time.
+    Furthermore the program creates a rectangle around the text, aswell as positioningthe text.
+
+    Next the code "blits" (draws) the rendered text onto the Pygame screen. It uses the text surface (the rendered text)
+    and the text_rect to determine where to display the text on the screen.
+    After this the code repeats the process seen above, however this time it shows the amount of cars that are still alive.
+
+    Next the program uses pygame.display.flip to show the changes made to the screen. 
+    It effectively renders the text onto the screen after the blit operations.
+
+    Finally the program uses the clock.tick functionality to set the animation frames per second to 60 ensuring that the simulation runs consistently.
+
+    """
 
 def run_simulation(genomes, config):
     # Empty Collections For Nets and Cars
@@ -263,7 +414,7 @@ def run_simulation(genomes, config):
     clock = pygame.time.Clock()
     generation_font = pygame.font.SysFont("Arial", 30)
     alive_font = pygame.font.SysFont("Arial", 20)
-    game_map = pygame.image.load("map.png").convert()  # Convert Speeds Up A Lot
+    game_map = pygame.image.load("map2.png").convert()  # Convert Speeds Up A Lot
 
     global current_generation
     current_generation += 1
@@ -332,6 +483,13 @@ def run_simulation(genomes, config):
 
 """ 1. This Section:
     
+Firstly the code checks whether the program is being run as a main program and not as an imported module.
+
+Next the program procedes by loading the config:
+
+    It starts by setting the config's path to the config.txt path which contains settings for NEAT algorithm.
+    Next it creates a population and adds reporters and finally it runs the program for a max of 1000 generations and recombinations of genomes.
+
 """
 if __name__ == "__main__":
     # Load Config
